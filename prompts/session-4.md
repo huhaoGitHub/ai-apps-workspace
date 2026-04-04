@@ -27,7 +27,7 @@ D:\charles\program\ai\apps\session-4\label-02404
 D:\charles\program\ai\apps\session-4\label-02532
 
 ### Prompt
-现在这个博客项目有 backend、admin、user 三个服务，README 里本地启动和 docker-compose 启动都给了，但整体工程链路还是偏散。请基于现有 Spring Boot、Vue3、Vite、Docker、Nginx 结构，补一套更稳的工程化要求，重点看环境配置分层、三端构建发布一致性、服务启动顺序和部署前后校验，不要脱离当前目录结构重来。
+这个博客有 backend、admin、user 三端，Maven 和 Vite 各自独立构建，没有统一版本号约定，前端环境变量也是各自硬写在 vite.config.js 里。请按现有 pom.xml 和两个前端目录，梳理一套多端构建工程化方案，重点在版本管理、构建参数统一和构建产物命名规范，不要改业务逻辑。
 
 ---
 
@@ -37,7 +37,7 @@ D:\charles\program\ai\apps\session-4\label-02532
 D:\charles\program\ai\apps\session-4\label-02429
 
 ### Prompt
-这个秒杀项目现在是 Spring Boot、JPA、MySQL 和 docker-compose 的单后端结构，README 里已经有 dev/prod profile 说明和并发测试脚本。别重写业务，按现有 backend、tests 和容器编排补一套工程化方案，重点把环境分层、构建缓存、测试接入、日志规范和 CI 门禁梳理清楚。
+秒杀系统已经有并发压测脚本，但边界相关核心场景基本没有覆盖。按现有 backend/src/test 和 tests/api_concurrency_test.py，帮我想一套测试工程化思路，说清楚单测、集成测试和并发测试各自负责哪些路径，以及怎么验证防超卖逻辑是真的有效而不是靠事务运气。
 
 ---
 
@@ -47,7 +47,7 @@ D:\charles\program\ai\apps\session-4\label-02429
 D:\charles\program\ai\apps\session-4\label-02436
 
 ### Prompt
-这个任务管理系统后端已经是 Spring Boot、MyBatis-Plus、MySQL，README 里把单测、集成验证和 docker-compose 都写出来了。别推翻重来，基于现有 backend、db 初始化脚本和 src/test 结构，补一套更像正式交付项目的工程化方案，重点看配置分层、测试门禁、镜像构建、日志级别和 CI 流程。
+任务管理系统 common/ 里已经有 AOP 日志拦截，但格式不统一，出问题了追调用链很费劲。按现有 backend/src 和 logback-spring.xml，帮我把日志工程化梳理一下，重点放在格式标准化、分级输出和异常堆栈追踪，还有本地开发和生产怎么分开配置，不要动业务代码。
 
 ---
 
@@ -57,7 +57,7 @@ D:\charles\program\ai\apps\session-4\label-02436
 D:\charles\program\ai\apps\session-4\label-02465
 
 ### Prompt
-这个账户余额系统已经有 Spring Boot 3、Sa-Token、Vue3 管理端、Nginx 和 docker-compose，后端本地默认走 H2，容器里走 MySQL。不要重写功能，按现有 backend、frontend-admin、schema.sql 和 nginx 配置，整理一套工程化补齐方案，把环境切换、前后端构建发布、一致性校验、日志和部署回滚想清楚。
+账户余额系统后端本地走 H2，容器里切 MySQL，但 dev 和 prod 配置基本堆在一个 application.yml 里，前端 API 地址也是写死的。按 backend/src/main/resources 和 frontend-admin 现有结构，帮我把多环境配置分层梳理一下，让本地开发、集成自测和生产能各拿各的配置，互不干扰。
 
 ---
 
