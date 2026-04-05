@@ -1,13 +1,13 @@
 ---
-description: "Use when: PromptArchitect 在 session-4 场景下根据一个或多个已拉取项目生成提示词，并需要将结果写入 prompts/session-4.md。要求先检查同一 session 中是否已有语义相近的提示词，若有则先询问用户是否保留。"
-applyTo: "prompts/session-4.md"
+description: "Use when: PromptArchitect 在 session-4 场景下根据一个或多个已拉取项目生成提示词，并需要将结果写入 03.trae prompts/session-4.md。要求先检查同一 session 中是否已有语义相近的提示词，若有则先询问用户是否保留。"
+applyTo: "03.trae prompts/session-4.md"
 ---
 
 # PromptArchitect Session 4 规则
 
 当 PromptArchitect 为 session-4 生成提示词时，必须遵循以下规则：
 
-1. 输出文件固定为 prompts/session-4.md。
+1. 输出文件固定为 03.trae prompts/session-4.md。
 2. 文件不存在时，创建该文件。
 3. 文件已存在时，默认采用追加，不覆盖整个文件。
 4. 支持一次处理一个或多个项目；批量输入时，必须按项目逐个生成、逐个判断、逐个写入。
@@ -24,7 +24,7 @@ applyTo: "prompts/session-4.md"
 ## Q: <项目名>
 
 ### 项目路径
-<本地目录>
+<本地目录，默认形如 D:\charles\program\ai\apps\02.work session\session-4\gitlab source\<项目名>>
 
 ### Prompt
 <生成的提示词>
@@ -37,5 +37,5 @@ applyTo: "prompts/session-4.md"
 ```
 
 11. PromptArchitect 生成提示词时，应结合项目目录、README、配置文件和主要源码结构，不要脱离代码仓库凭空发挥。
-12. 如果当前仓库信息不足以支撑稳定提示词，先说明缺口，再决定是否继续写入 prompts/session-4.md。
+12. 如果当前仓库信息不足以支撑稳定提示词，先说明缺口，再决定是否继续写入 03.trae prompts/session-4.md。
 13. 批量模式下，如果某个项目分析失败，不影响其他项目继续生成；但返回结果里要明确指出失败项目和原因。

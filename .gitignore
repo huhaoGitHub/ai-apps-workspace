@@ -1,8 +1,9 @@
 # Session workspaces
-/session-*/
+/02.work session/session-4/gitlab source/**
+!/02.work session/session-4/gitlab source/
 
 # Prompts (local only)
-/prompts/session-4.md
+/03.trae prompts/session-4.md
 
 # Environment files
 .env
