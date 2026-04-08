@@ -1,6 +1,6 @@
 ---
 name: analysis-skill
-description: "Use when: 需要先让用户提供项目名，再读取 02.work session/session-4/gitlab source/<项目名>、03.trae prompts/session-4.md 和 02.work session/session-4/ai-model-result/<项目名>.md，分析模型是否完成提示词要求，并将评价结果写入 02.work session/session-4/ai-model-result/<项目名>-评价结果.md。"
+description: "Use when: 需要先让用户提供项目名，再读取 02.work session/session-4/gitlab source/<项目名> 和 02.work session/session-4/ai-model-result/<项目名>.md，分析模型是否完成提示词要求，并将评价结果写入 02.work session/session-4/ai-model-result/<项目名>-评价结果.md。"
 ---
 
 # 分析技能
@@ -35,7 +35,6 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 拿到项目名后，按下面顺序读取上下文：
 
 1. `02.work session/session-4/gitlab source/<项目名>/`
-2. `03.trae prompts/session-4.md`
 3. `02.work session/session-4/ai-model-result/<项目名>.md`
 
 如果 `03.trae prompts/session-4.md` 中同一个项目存在多条记录：
@@ -157,7 +156,7 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 ## 执行流程
 
 1. 先向用户询问项目名。
-2. 读取 `03.trae prompts/session-4.md`，找到本次分析对应的 prompt。
+2. 读取 `02.work session/session-4/ai-model-result/<项目名>.md`，找到本次分析对应的 提示词。
 3. 读取 `02.work session/session-4/gitlab source/<项目名>/`，确认实际代码和结果状态。
 4. 读取 `02.work session/session-4/ai-model-result/<项目名>.md`，整理模型执行过程和最终结果。
 5. 对照 prompt 要求与实际结果，判断任务完成度。
