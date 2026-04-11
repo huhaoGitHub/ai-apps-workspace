@@ -17,8 +17,7 @@ apps/
 ├── .github/                   # Workspace agents / instructions
 ├── [pre-work]workflow steps/  # 执行流程文档
 ├── 01.entry-skills/           # 入口技能
-├── 02.work session/           # 各 session 的工作区
-└── 03.trae prompts/           # 各 session 的提示词记录
+└── 02.work session/           # 各 session 的工作区
 ```
 
 ## 目录说明
@@ -47,19 +46,14 @@ apps/
 
 例如 `02.work session/session-4/` 就是 session-4 的完整工作区。
 
-### 03.trae prompts/
-
-保存每个 session 对应的提示词记录。通常一个项目会在这里保留当前测试用的 prompt，供后续执行和分析阶段引用。
-
 ## 推荐流程
 
 一次完整的 session 流程通常是：
 
 1. 根据项目 ID，把代码拉到 `02.work session/<session>/gitlab source/`。
-2. 基于项目结构生成提示词，并写入 `03.trae prompts/<session>.md`。
-3. 将提示词发给模型执行，记录 session id 和完整回答。
-4. 把执行过程沉淀到 `02.work session/<session>/ai-model-result/`。
-5. 对照代码、提示词和结果文件，输出评价结果。
+2. 将提示词填入结果记录文件，发给模型执行并记录 session id 和完整回答。
+3. 把执行过程沉淠到 `02.work session/<session>/ai-model-result/`。
+4. 对照代码和结果文件，输出评价结果。
 
 ## Session 4 约定
 
@@ -67,7 +61,6 @@ apps/
 
 - 项目代码目录：`02.work session/session-4/gitlab source/<项目名>/`
 - 模型结果目录：`02.work session/session-4/ai-model-result/`
-- 提示词文件：`03.trae prompts/session-4.md`
 - 流程文档：`[pre-work]workflow steps/session-4-flow.md`
 - 入口技能：`01.entry-skills/session-4/`
 

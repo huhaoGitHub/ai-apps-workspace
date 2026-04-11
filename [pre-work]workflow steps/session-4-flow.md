@@ -8,7 +8,6 @@
 
 - 项目代码：`02.work session/session-4/gitlab source/`
 - 模型结果：`02.work session/session-4/ai-model-result/`
-- 提示词文件：`03.trae prompts/session-4.md`
 - 拉取技能：`01.entry-skills/session-4/session-4-clone-gitlab-skill.md`
 - 分析技能：`01.entry-skills/session-4/analysis-skill.md`
 
@@ -23,12 +22,11 @@
 执行时结合 `01.entry-skills/session-4/session-4-clone-gitlab-skill.md`，完成以下动作：
 
 - 将项目拉取到 `02.work session/session-4/gitlab source/<项目名>/`
-- 生成 prompt，并写入 `03.trae prompts/session-4.md`
 - 创建对应的模型结果记录文件 `02.work session/session-4/ai-model-result/<项目名>.md`
 
 ## 3. 确认提示词
 
-打开 `03.trae prompts/session-4.md`，找到当前项目名对应的 prompt。
+打开 `02.work session/session-4/ai-model-result/<项目名>.md`，在第一行填入本次要使用的提示词。
 
 如果该项目下存在多条 prompt：
 
@@ -65,7 +63,6 @@
 
 - `02.work session/session-4/ai-model-result/<项目名>.md`
 - `01.entry-skills/session-4/analysis-skill.md`
-- `03.trae prompts/session-4.md`
 - `02.work session/session-4/gitlab source/<项目名>/`
 
 分析目标是：
