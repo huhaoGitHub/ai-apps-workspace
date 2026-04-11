@@ -126,7 +126,7 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 
 ## 输出格式
 
-每次追加一个完整评价块，标题带轮次编号，**标题之后必须紧跟 `## 提示词` 和 `## Session ID` 两节**，内容从 `ai-model-result/<项目名>.md` 对应轮次中读取：
+每次追加一个完整评价块，标题带轮次编号，**标题之后必须紧跟 `## 提示词`、`## Session ID` 和 `## 文件修改` 三节**，前两节内容从 `ai-model-result/<项目名>.md` 对应轮次中读取，第三节通过扫描该轮次的 `edit_file_search_replace` 和 `Write` 工具调用记录得出：
 
 ```markdown
 # <项目名> 第 N 次对话评价结果
@@ -136,6 +136,10 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 
 ## Session ID
 <从 ai-model-result/<项目名>.md 中读取"模型第 N 次回答 trae session id"的完整内容>
+
+## 文件修改
+单文件修改 / 多文件修改 / 无代码修改
+修改文件：<文件名1>、<文件名2>（无修改时省略此行）
 
 ## 任务完成度
 已完成 / 未完成
@@ -162,6 +166,7 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 1. 先向用户询问项目名。
 2. 读取 `02.work session/session-4/ai-model-result/<项目名>.md`，列出所有对话轮次，向用户确认要分析第几次对话。
 3. 从该文件中提取"用户第 N 次提示词"作为 prompt，提取"模型第 N 次回答内容"作为执行结果。
+4. 扫描该轮次内容，统计 `edit_file_search_replace` 和 `Write` 工具调用中出现的 `filePath`，去重后记录修改文件列表；0 个文件为"无代码修改"，1 个为"单文件修改"，2 个及以上为"多文件修改"。
 4. 读取 `02.work session/session-4/gitlab source/<项目名>/`，确认实际代码和结果状态。
 5. 对照 prompt 要求与实际结果，判断任务完成度。
 6. 判断这次结果整体是否满意。
