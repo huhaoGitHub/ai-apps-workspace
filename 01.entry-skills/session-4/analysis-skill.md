@@ -23,25 +23,23 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 
 ## 执行前提
 
-执行前必须先向用户确认项目名，例如：
+执行前必须先向用户确认两项信息：
 
-- `label-02404`
-- `label-01849`
+1. **项目名**，例如：`label-02404`、`label-01849`
+2. **第几次对话**，例如：第 1 次、第 2 次
 
-没有项目名时，不要自行猜测，不要直接开始分析。
+没有项目名或对话轮次时，不要自行猜测，不要直接开始分析。
+
+如果用户只给了项目名，先读取 `02.work session/session-4/ai-model-result/<项目名>.md`，列出文件中所有对话轮次（即所有"用户第X次提示词"），再询问用户要分析哪一次。
 
 ## 输入来源
 
-拿到项目名后，按下面顺序读取上下文：
+拿到项目名和对话轮次后，按下面顺序读取上下文：
 
-1. `02.work session/session-4/gitlab source/<项目名>/`
-3. `02.work session/session-4/ai-model-result/<项目名>.md`
+1. `02.work session/session-4/ai-model-result/<项目名>.md`——从中找到"用户第 N 次提示词"作为本次分析的 prompt，以及对应的"模型第 N 次回答内容"作为执行结果
+2. `02.work session/session-4/gitlab source/<项目名>/`——确认实际代码状态
 
-如果 `03.trae prompts/session-4.md` 中同一个项目存在多条记录：
-
-- 优先使用和当前分析目标最匹配的记录
-- 如果无法明确判断，则优先使用最后一条同项目记录
-- 不要把多条不同任务类型的 prompt 混在一起做一次评价
+**不再**从 `03.trae prompts/session-4.md` 中查找提示词。
 
 ## 分析目标
 
@@ -116,7 +114,7 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 
 ## 输出文件
 
-评价结果固定写入：
+评价结果固定追加写入：
 
 - `02.work session/session-4/ai-model-result/<项目名>-评价结果.md`
 
@@ -124,14 +122,14 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 
 - `02.work session/session-4/ai-model-result/label-02404-评价结果.md`
 
-如果文件已存在，默认覆盖旧结果，写入本次最新分析。
+**每次分析结果追加到文件末尾，不覆盖已有内容。**文件不存在时新建。
 
 ## 输出格式
 
-推荐格式：
+每次追加一个完整评价块，标题带轮次编号：
 
 ```markdown
-# <项目名> 评价结果
+# <项目名> 第 N 次对话评价结果
 
 ## 任务完成度
 已完成 / 未完成
@@ -156,9 +154,9 @@ description: "Use when: 需要先让用户提供项目名，再读取 02.work se
 ## 执行流程
 
 1. 先向用户询问项目名。
-2. 读取 `02.work session/session-4/ai-model-result/<项目名>.md`，找到本次分析对应的 提示词。
-3. 读取 `02.work session/session-4/gitlab source/<项目名>/`，确认实际代码和结果状态。
-4. 读取 `02.work session/session-4/ai-model-result/<项目名>.md`，整理模型执行过程和最终结果。
+2. 读取 `02.work session/session-4/ai-model-result/<项目名>.md`，列出所有对话轮次，向用户确认要分析第几次对话。
+3. 从该文件中提取"用户第 N 次提示词"作为 prompt，提取"模型第 N 次回答内容"作为执行结果。
+4. 读取 `02.work session/session-4/gitlab source/<项目名>/`，确认实际代码和结果状态。
 5. 对照 prompt 要求与实际结果，判断任务完成度。
 6. 判断这次结果整体是否满意。
 7. 若为未完成，撰写未完成说明。
