@@ -178,22 +178,32 @@ PROJECT_NAME="label-${PADDED}"
 ```markdown
 A-label-01035-代码生成-01
 
-提示词：<prompt 内容>
+用户第一次提示词：<prompt 内容>
 
-模型回答 trae session id：
+模型第一次回答 trae session id：
 
-模型回答内容：
+模型第一次回答内容：
 
----
 
-A-label-01035-代码生成-02
 
-提示词：<prompt 内容>
+用户第二次提示词：
 
-模型回答 trae session id：
+模型第二次回答 trae session id：
 
-模型回答内容：
+模型第二次回答内容：
+
+
+
+用户第三次提示词：
+
+模型第三次回答 trae session id：
+
+模型第三次回答内容：
 ```
+
+说明：
+- 提示词内容默认填充到「用户第一次提示词」字段。
+- 第二次、第三次提示词及回答字段留空占位，供用户手动补充。
 
 如果目标文件已存在，则跳过，不覆盖。
 
