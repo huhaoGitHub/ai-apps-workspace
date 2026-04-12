@@ -144,10 +144,10 @@ PROJECT_NAME="label-${PADDED}"
 
 类型输入支持：
 
-- `bug 修复*4`
-- `0-1 代码生成*4`
-- `代码生成*4`（`0-1 代码生成` 的简写）
-- `Feature 迭代*4`
+- `bug 修复*3`
+- `0-1 代码生成*3`
+- `代码生成*3`（`0-1 代码生成` 的简写）
+- `Feature 迭代*3`
 - `代码理解*1`
 - `代码重构*1`
 - `工程化*1`
@@ -231,9 +231,9 @@ A-label-01035-代码生成-01
 ```text
 项目：1035
 命令：generate
-bug 修复*4
-0-1 代码生成*4
-Feature 迭代*4
+bug 修复*3
+0-1 代码生成*3
+Feature 迭代*3
 代码理解*1
 代码重构*1
 工程化*1
@@ -244,15 +244,15 @@ Feature 迭代*4
 
 ```text
 项目名：label-01035
-主仓目录：D:\charles\program\ai\apps\02.work session\session-4\gitlab source\label-01035\
+主仓目录：D:\charles\program\ai\apps\02.work session\session-4\gitlab source\label-01035-plus\label-01035
 类型目录：D:\charles\program\ai\apps\02.work session\session-4\ai-model-result\label-01035\label-01035-bug修复\
 提示词文件：A-label-01035-bug修复-01.md ... A-label-01035-代码测试-13.md
-子仓目录：D:\charles\program\ai\apps\02.work session\session-4\gitlab source\label-01035\label-01035-bug修复\A-label-01035-bug修复-01\ ...
+子仓目录：D:\charles\program\ai\apps\02.work session\session-4\gitlab source\label-01035-plus\label-01035-bug修复\A-label-01035-bug修复-01\ ...
 ```
 
 ## 注意事项
 
-1. 默认先拉取单份主仓到 `02.work session/session-4/gitlab source/<项目名>/`。
+1. 默认先拉取单份主仓到 `02.work session/session-4/gitlab source/<项目名>-plus/<项目名>/`。
 2. 结果文件必须落在 `02.work session/session-4/ai-model-result/<项目名>/<项目名>-<类型>/` 下。
-3. 子仓必须落在 `02.work session/session-4/gitlab source/<项目名>/<项目名>-<类型>/` 下，并与提示词编号一一对应。
+3. 子仓必须落在 `02.work session/session-4/gitlab source/<项目名>-plus/<项目名>/<项目名>-<类型>/` 下，并与提示词编号一一对应。
 4. Bug 修复相关改动只能发生在对应 bug 子仓内。
