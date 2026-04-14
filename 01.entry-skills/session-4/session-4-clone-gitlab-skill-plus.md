@@ -94,8 +94,8 @@ Feature 迭代*5
 5. **调用 `PromptArchitect` agent**，传入项目名、类型配额和代码目录上下文，由其生成每条提示词内容。
 6. 以项目/类型两级目录写入提示词文件，文件名格式：`A-<项目名>-<类型>-<index>.md`；提示词内容来自上一步 PromptArchitect 的输出。
 7. 每个提示词文件正文必须包含同名标识串：`A-<项目名>-<类型>-<index>`。
-8. 按提示词逐条复制主仓到对应子仓目录，确保一条提示词对应一个子仓。
-9. 对 Bug 修复类型，在对应 bug 子仓中设计 bug；禁止在主仓或其他子仓改动。
+8. 按提示词逐条复制主仓到对应子仓目录（子仓与主仓同级并列，禁止嵌套在主仓内部），确保一条提示词对应一个子仓。
+9. **子仓复制完成后，禁止再对任何子仓进行任何操作**（包括文件修改、代码变更、git 操作、造 bug 等）。generate 流程到此结束，后续修改必须在新的独立会话中由用户明确指令。
 10. 输出汇总：成功项、失败项、文件路径、子仓路径。
 
 ### append
@@ -156,12 +156,14 @@ PROJECT_NAME="label-${PADDED}"
 
 ## 路径规则
 
-- 仓库代码：`02.work session/session-4/gitlab source/<项目名>/`
-- 类型子仓目录：`02.work session/session-4/gitlab source/<项目名>/<项目名>-<类型>/`
-- 单条提示词子仓：`02.work session/session-4/gitlab source/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-<index>/`
-- 模型结果根目录：`02.work session/session-4/ai-model-result/<项目名>/`
-- 类型结果目录：`02.work session/session-4/ai-model-result/<项目名>/<项目名>-<类型>/`
-- 单条提示词文件：`02.work session/session-4/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-<index>.md`
+- 主仓目录：`02.work session/session-4/gitlab source/<项目名>-plus/<项目名>/`
+- 类型子仓目录：`02.work session/session-4/gitlab source/<项目名>-plus/<项目名>-<类型>/`
+- 单条提示词子仓：`02.work session/session-4/gitlab source/<项目名>-plus/<项目名>-<类型>/A-<项目名>-<类型>-<index>/`
+- 模型结果根目录：`02.work session/session-4/ai-model-result/<项目名>-plus/`
+- 类型结果目录：`02.work session/session-4/ai-model-result/<项目名>-plus/<项目名>-<类型>/`
+- 单条提示词文件：`02.work session/session-4/ai-model-result/<项目名>-plus/<项目名>-<类型>/A-<项目名>-<类型>-<index>.md`
+
+> ⚠️ **子仓与主仓同级并列，禁止嵌套在主仓内部。** 子仓目录放在 `<项目名>-plus/<项目名>-<类型>/` 下，与主仓 `<项目名>-plus/<项目名>/` 并列在同一 `<项目名>-plus/` 目录中，绝不能出现在主仓目录的子级路径中。
 
 ## 提示词文件初始化
 
@@ -264,11 +266,14 @@ Feature 迭代*5
 类型目录：D:\charles\program\ai\apps\02.work session\session-4\ai-model-result\label-01035\label-01035-bug修复\
 提示词文件：A-label-01035-bug修复-01.md ... A-label-01035-代码测试-19.md
 子仓目录：D:\charles\program\ai\apps\02.work session\session-4\gitlab source\label-01035-plus\label-01035-bug修复\A-label-01035-bug修复-01\ ...
+注意：子仓与主仓并列在 label-01035-plus/ 下，非主仓子目录；复制完成后不再对子仓做任何操作。
 ```
 
 ## 注意事项
 
 1. 默认先拉取单份主仓到 `02.work session/session-4/gitlab source/<项目名>-plus/<项目名>/`。
-2. 结果文件必须落在 `02.work session/session-4/ai-model-result/<项目名>/<项目名>-<类型>/` 下。
-3. 子仓必须落在 `02.work session/session-4/gitlab source/<项目名>-plus/<项目名>/<项目名>-<类型>/` 下，并与提示词编号一一对应。
-4. Bug 修复相关改动只能发生在对应 bug 子仓内。
+2. 结果文件必须落在 `02.work session/session-4/ai-model-result/<项目名>-plus/<项目名>-<类型>/` 下。
+3. 子仓必须落在 `02.work session/session-4/gitlab source/<项目名>-plus/<项目名>-<类型>/` 下，与主仓 `<项目名>-plus/<项目名>/` 同级并列，并与提示词编号一一对应。
+4. **⚠️ 子仓禁止嵌套在主仓目录内部。** 子仓目录与主仓目录必须在同一父级 `<项目名>-plus/` 下并列存放，绝不能作为主仓的子目录。嵌套会导致主仓 `.git` 状态被污染、子仓代码被 git 忽略或误追踪。
+5. **⚠️ 子仓复制完成后，禁止再对任何子仓进行任何操作（包括但不限于：文件修改、代码变更、git 操作、造 bug 等）。** 子仓复制是 generate 流程的最后一步，复制完成后整个 generate 命令即告结束。后续所有代码修改工作（包括 Bug 修复类型的设计 bug）必须在新的独立会话中、由用户明确指令后才可进行，本技能不再触碰子仓内容。
+6. Bug 修复相关改动只能发生在对应 bug 子仓内，且只能在子仓复制完成后的后续会话中执行，不在 generate 流程中自动进行。
