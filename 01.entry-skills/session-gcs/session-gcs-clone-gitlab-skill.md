@@ -42,7 +42,7 @@ description: "Use when: 需要根据 GitLab 项目 ID 拉取源码、推送到 G
 
 | 命令 | 说明 |
 |------|------|
-| setup | 默认命令。拉取 GitLab 源码→确认任务类型→（Bug 修复类则在 origin 注入 bug）→推送 GitHub→创建并拉取三个对比分支 |
+| setup | 默认命令。拉取 GitLab 源码→确认任务类型→（Bug 修复类则在 origin 注入 bug）→推送 GitHub→创建并拉取三个对比分支→**自动进入 generate 流程** |
 | generate | 传入已确认的类型，生成并优化单条提示词、写入结果文件 |
 | info | 仅输出项目名和仓库地址，不执行任何操作 |
 
@@ -55,14 +55,14 @@ description: "Use when: 需要根据 GitLab 项目 ID 拉取源码、推送到 G
 | 项目 ID 补全规则 | 不足 5 位前面补 0 | 如 1849 → label-01849 |
 | 项目名前缀 | label- | 默认项目名前缀 |
 | GitLab 认证方式 | HTTPS + Access Token | 禁止使用 SSH 克隆 |
-| GitLab Access Token | glpat-JJiSr7nMVsWDidJozLD2mG86MQp1OjJuCA.01.0y156vhp6 | 用户名固定为 oauth2 |
+| GitLab Access Token | 由用户在首次使用时提供，不在 skill 中存储 | 用户名固定为 oauth2 |
 | GitHub 用户名 | attitudeshuai | GitHub 推送账号 |
 | GitHub 仓库名 | `<项目名>` | 推送到 GitHub 时使用 |
 | GitHub 可见性 | public | 所有 GitHub 仓库设为公共访问 |
 | GitHub 连接方式 | 优先 SSH，不可用时回退 HTTPS + PAT | 遵循 github-repo-sync skill |
 | 对比分支 | 0414-original / 0414-dyad / 0414-trinity | 三个分支从 main 创建 |
 | 提示词数量 | 每次仅生成 1 条 | session-gcs 固定单条 |
-| 提示词文件数量 | 每个类型目录生成 3 份 | 文件名后缀分别对应 `-original`、`-dyad`、`-trinity` |
+| 提示词文件数量 | 每个类型目录生成 6 份 | 每个模型对应 1 份对话内容 + 1 份评价结果，共 3 模型 × 2 = 6 份 |
 | 本地根目录 | `02.work session/session-gcs/gitlab source/` | origin 仓与分支仓根目录 |
 | 结果根目录 | `02.work session/session-gcs/ai-model-result/` | 提示词结果根目录 |
 | 文件名前缀 | A | 固定前缀 |
@@ -134,6 +134,7 @@ description: "Use when: 需要根据 GitLab 项目 ID 拉取源码、推送到 G
 
 10. 验证四个本地目录均存在（origin + 三个分支）。
 11. 输出汇总：GitLab 地址、GitHub 地址、本地目录列表、分支状态、**确认的任务类型**。
+12. **setup 完成后，立即自动执行 generate 流程**，无需用户再次输入命令。
 
 ### generate
 
@@ -154,7 +155,9 @@ description: "Use when: 需要根据 GitLab 项目 ID 拉取源码、推送到 G
    | 业务逻辑约束 | 已中奖记录不允许被修改 |
 
    选择原则：选与项目实际情况和任务类型匹配的约束，不要填充无关约束。Bug 修复类型必选『非代码回复约束』（不要暴露修复方向）。
-5. 将优化后的提示词（含约束标签）写入 **3 个**结果文件（见路径规则），内容完全一致，文件名后缀分别为 `-original`、`-dyad`、`-trinity`。
+5. 将优化后的提示词（含约束标签）写入 **6 个**结果文件（见路径规则）：
+   - **对话内容文件 × 3**：内容完全一致，文件名后缀分别为 `-original-对话内容`、`-dyad-对话内容`、`-trinity-对话内容`，供模型填写对话记录。
+   - **评价结果文件 × 3**：内容为空白评价模板，文件名后缀分别为 `-original-评价结果`、`-dyad-评价结果`、`-trinity-评价结果`，供人工填写评分与结论。
 6. ⚠️ **写入完成即为 generate 流程的终点。禁止对三个分支仓库进行任何操作（包括但不限于：文件修改、代码变更、git 操作）。**
 
 ### info
@@ -181,17 +184,24 @@ description: "Use when: 需要根据 GitLab 项目 ID 拉取源码、推送到 G
 # 类型结果目录
 02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/
 
-# 提示词文件（3 份，命名后缀对应分支名称尾部）
-02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-original.md
-02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-dyad.md
-02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-trinity.md
+# 对话内容文件（3 份，内容一致，供模型填写对话记录）
+02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-original-对话内容.md
+02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-dyad-对话内容.md
+02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-trinity-对话内容.md
+
+# 评价结果文件（3 份，供人工填写评分与结论）
+02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-original-评价结果.md
+02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-dyad-评价结果.md
+02.work session/session-gcs/ai-model-result/<项目名>/<项目名>-<类型>/A-<项目名>-<类型>-trinity-评价结果.md
 ```
 
 > ⚠️ **origin 仓与三个分支仓同级并列，均在 `<项目名>/` 下，禁止相互嵌套。**
 
 ## 提示词文件模板
 
-generate 完成后，每个类型目录下生成 3 份内容完全一致的文件（`-original.md` / `-dyad.md` / `-trinity.md`），格式如下：
+generate 完成后，每个类型目录下生成 **6 份**文件：3 份对话内容 + 3 份评价结果。
+
+### 对话内容文件模板（`-对话内容.md`，3 份内容完全一致）
 
 ```markdown
 A-<项目名>-<类型>-01
@@ -214,23 +224,84 @@ A-<项目名>-<类型>-01
 
 用户第二次提示词：
 
-模型第二次回答 trae session id：
-
 模型第二次回答内容：
 
 
 
 用户第三次提示词：
 
-模型第三次回答 trae session id：
-
 模型第三次回答内容：
 ```
 
+### 评价结果文件模板（`-评价结果.md`，每个模型独立一份）
+
+```markdown
+A-<项目名>-<类型>-<模型名>-评价结果
+
+模型：0414-<模型名>
+
+## 第一轮评价
+
+提示词理解准确度：
+
+技术深度：
+
+回答完整性：
+
+表达清晰度：
+
+综合评分（1-5）：
+
+评价备注：
+
+
+
+## 第二轮评价
+
+提示词理解准确度：
+
+技术深度：
+
+回答完整性：
+
+表达清晰度：
+
+综合评分（1-5）：
+
+评价备注：
+
+
+
+## 第三轮评价
+
+提示词理解准确度：
+
+技术深度：
+
+回答完整性：
+
+表达清晰度：
+
+综合评分（1-5）：
+
+评价备注：
+
+
+
+## 总体评价
+
+总分：
+
+优势：
+
+不足：
+
+与其他模型对比结论：
+```
+
 说明：
-- 提示词内容填入「用户第一次提示词」字段。
-- 第二次、第三次提示词及回答字段留空占位，供用户手动补充。
-- 3 份文件内容完全一致，仅文件名后缀不同。
+- 对话内容文件：提示词内容填入「用户第一次提示词」字段，第二次、第三次提示词及回答字段留空占位，供用户手动补充。3 份内容完全一致，仅文件名后缀不同。
+- 评价结果文件：3 份评分模板各自独立（模型名不同），内容均为空白，供人工逐条填写。
 - 如果目标文件已存在，跳过，不覆盖。
 
 ## 输入规则
@@ -262,7 +333,7 @@ PROJECT_NAME="label-${PADDED}"
 
 | 远程 | 方式 | 说明 |
 |------|------|------|
-| GitLab | HTTPS + Access Token | 用户名固定 `oauth2`，token 对外展示替换为 `***` |
+| GitLab | HTTPS + Access Token | 用户名固定 `oauth2`，token 不存储在 skill 中，对外展示替换为 `***` |
 | GitHub | SSH（优先）/ HTTPS + PAT | 遵循 github-repo-sync skill |
 
 ## 异常处理
@@ -308,9 +379,14 @@ GitHub 分支：main / 0414-original / 0414-dyad / 0414-trinity ✓
 
 ```text
 提示词文件（3 份，内容一致）：
-  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-original.md
-  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-dyad.md
-  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-trinity.md
+  # 对话内容（3 份，内容一致）
+  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-original-对话内容.md
+  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-dyad-对话内容.md
+  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-trinity-对话内容.md
+  # 评价结果（3 份，空白模板）
+  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-original-评价结果.md
+  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-dyad-评价结果.md
+  02.work session/session-gcs/ai-model-result/label-01035/label-01035-工程化/A-label-01035-工程化-trinity-评价结果.md
 
 内容：<humanizer-zh 优化后的提示词>
 
@@ -323,7 +399,7 @@ GitHub 分支：main / 0414-original / 0414-dyad / 0414-trinity ✓
 2. 任务类型必须在 setup 阶段、**GitHub 推送之前**确认；Bug 修复类型进一步必须在 origin 推送前注入 bug。
 3. Bug 修复类型：bug 只在 origin 本地注入一次，commit 后推送到 GitHub main，三个对比分支因继承自 main 而天然包含相同的 bug，无需逐分支单独注入。
 4. 三个分支仓是模型执行时的工作区，**本技能在 generate 完成后不再触碰**。
-5. 每个类型目录下生成 3 份提示词文件，内容完全一致，文件名后缀分别为 `-original`、`-dyad`、`-trinity`，对应三个对比分支。
+5. 每个类型目录下生成 6 份文件：3 份对话内容（`-original-对话内容` / `-dyad-对话内容` / `-trinity-对话内容`，内容一致）+ 3 份评价结果（`-original-评价结果` / `-dyad-评价结果` / `-trinity-评价结果`，空白模板）。
 6. humanizer-zh 优化是必须步骤，不可跳过；PromptArchitect 的原始输出不直接写入文件。
 7. GitHub 仓库可见性必须为 public，在 setup 阶段确认。
 8. 对比逻辑记录：
