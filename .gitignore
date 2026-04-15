@@ -1,6 +1,7 @@
 # Session workspaces
 /02.work session/session-4/
 !/02.work session/session-4/gitlab source/
+/02.work session/session-gcs/ai-model-result/
 
 # Environment files
 .env
