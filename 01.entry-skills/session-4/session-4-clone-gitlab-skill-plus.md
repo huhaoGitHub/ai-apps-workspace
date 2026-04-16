@@ -92,8 +92,8 @@ Feature 迭代*5
 3. 若主仓不存在，先执行 clone 拉取主仓。
 4. 校验本轮总数不超过 19；index 使用全局累计并补零（01-19）。
 5. **调用 `PromptArchitect` agent**，传入项目名、类型配额和代码目录上下文，由其生成每条提示词内容。
-6. 以项目/类型两级目录写入提示词文件，文件名格式：`A-<项目名>-<类型>-<index>.md`；提示词内容来自上一步 PromptArchitect 的输出。
-7. 每个提示词文件正文必须包含同名标识串：`A-<项目名>-<类型>-<index>`。
+6. 以项目/类型两级目录写入提示词文件，文件名格式：`B-<项目名>-<类型>-<index>.md`；提示词内容来自上一步 PromptArchitect 的输出。
+7. 每个提示词文件正文必须包含同名标识串：`B-<项目名>-<类型>-<index>`。
 8. 按提示词逐条复制主仓到对应子仓目录（子仓与主仓同级并列，禁止嵌套在主仓内部），确保一条提示词对应一个子仓。
 9. **子仓复制完成后，禁止再对任何子仓进行任何操作**（包括文件修改、代码变更、git 操作、造 bug 等）。generate 流程到此结束，后续修改必须在新的独立会话中由用户明确指令。
 10. 输出汇总：成功项、失败项、文件路径、子仓路径。
@@ -158,10 +158,10 @@ PROJECT_NAME="label-${PADDED}"
 
 - 主仓目录：`02.work session/session-4/gitlab source/<项目名>-plus/<项目名>/`
 - 类型子仓目录：`02.work session/session-4/gitlab source/<项目名>-plus/<项目名>-<类型>/`
-- 单条提示词子仓：`02.work session/session-4/gitlab source/<项目名>-plus/<项目名>-<类型>/A-<项目名>-<类型>-<index>/`
+- 单条提示词子仓：`02.work session/session-4/gitlab source/<项目名>-plus/<项目名>-<类型>/B-<项目名>-<类型>-<index>/`
 - 模型结果根目录：`02.work session/session-4/ai-model-result/<项目名>-plus/`
 - 类型结果目录：`02.work session/session-4/ai-model-result/<项目名>-plus/<项目名>-<类型>/`
-- 单条提示词文件：`02.work session/session-4/ai-model-result/<项目名>-plus/<项目名>-<类型>/A-<项目名>-<类型>-<index>.md`
+- 单条提示词文件：`02.work session/session-4/ai-model-result/<项目名>-plus/<项目名>-<类型>/B-<项目名>-<类型>-<index>.md`
 
 > ⚠️ **子仓与主仓同级并列，禁止嵌套在主仓内部。** 子仓目录放在 `<项目名>-plus/<项目名>-<类型>/` 下，与主仓 `<项目名>-plus/<项目名>/` 并列在同一 `<项目名>-plus/` 目录中，绝不能出现在主仓目录的子级路径中。
 
@@ -179,7 +179,7 @@ PROJECT_NAME="label-${PADDED}"
 模板示例：
 
 ```markdown
-A-label-01035-代码生成-01
+B-label-01035-代码生成-01
 
 用户第一次提示词：<prompt 内容>
 
@@ -266,8 +266,8 @@ Feature 迭代*5
 项目名：label-01035
 主仓目录：D:\charles\program\ai\apps\02.work session\session-4\gitlab source\label-01035-plus\label-01035
 类型目录：D:\charles\program\ai\apps\02.work session\session-4\ai-model-result\label-01035\label-01035-bug修复\
-提示词文件：A-label-01035-bug修复-01.md ... A-label-01035-代码测试-19.md
-子仓目录：D:\charles\program\ai\apps\02.work session\session-4\gitlab source\label-01035-plus\label-01035-bug修复\A-label-01035-bug修复-01\ ...
+提示词文件：B-label-01035-bug修复-01.md ... B-label-01035-代码测试-19.md
+子仓目录：D:\charles\program\ai\apps\02.work session\session-4\gitlab source\label-01035-plus\label-01035-bug修复\B-label-01035-bug修复-01\ ...
 注意：子仓与主仓并列在 label-01035-plus/ 下，非主仓子目录；复制完成后不再对子仓做任何操作。
 ```
 
